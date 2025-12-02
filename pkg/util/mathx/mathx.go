@@ -37,3 +37,16 @@ func SumInts(nums []int) int {
 	}
 	return total
 }
+
+// FloorDiv performs integer division rounding toward negative infinity.
+func FloorDiv(a, b int) int {
+	if b == 0 {
+		panic("mathx.FloorDiv: division by zero")
+	}
+	q := a / b
+	r := a % b
+	if (r != 0) && ((r > 0) != (b > 0)) {
+		q--
+	}
+	return q
+}
