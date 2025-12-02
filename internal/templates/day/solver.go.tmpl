@@ -1,0 +1,29 @@
+package {{.Package}}
+
+import (
+    "fmt"
+
+    "github.com/chippers255/advent-of-code/pkg/solver"
+    "github.com/chippers255/advent-of-code/pkg/util/parse"
+)
+
+func init() {
+    solver.Register({{.Year}}, {{.Day}}, func() solver.Solver {
+        return &Solver{}
+    })
+}
+
+// Solver contains the logic for Advent of Code {{.Year}} Day {{.Day}}.
+type Solver struct{}
+
+// Part1 solves the first part of the puzzle.
+func (Solver) Part1(ctx solver.Context) (string, error) {
+    lines := parse.Lines(ctx.Input)
+    return fmt.Sprintf("%d", len(lines)), nil
+}
+
+// Part2 solves the second part of the puzzle.
+func (Solver) Part2(ctx solver.Context) (string, error) {
+    lines := parse.Lines(ctx.Input)
+    return fmt.Sprintf("%d", len(lines)), nil
+}
