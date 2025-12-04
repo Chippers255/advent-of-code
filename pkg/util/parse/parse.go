@@ -2,6 +2,7 @@ package parse
 
 import (
 	"bytes"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -68,4 +69,44 @@ func IntMatrix(data []byte) ([][]int, error) {
 	}
 
 	return matrix, nil
+}
+
+// read a list of ranges and return as a 2d slice of ints
+func RangeList(data []byte) ([][]int, error) {
+	line := strings.TrimSpace(string(data))
+	if line == "" {
+		return nil, fmt.Errorf("empty input")
+	}
+
+	ranges := strings.Split(line, ",")
+	if len(ranges) == 0 {
+		return nil, fmt.Errorf("no ranges found")
+	}
+	result := make([][]int, 0, len(ranges))
+
+	for _, r := range ranges {
+		r = strings.TrimSpace(r)
+		if r == "" {
+			return nil, fmt.Errorf("empty range")
+		}
+
+		parts := strings.Split(r, "-")
+		if len(parts) != 2 {
+			return nil, fmt.Errorf("invalid range format: %s (expected start-end)", r)
+		}
+
+		start, err := strconv.Atoi(strings.TrimSpace(parts[0]))
+		if err != nil {
+			return nil, fmt.Errorf("invalid start value in range %s: %w", r, err)
+		}
+
+		end, err := strconv.Atoi(strings.TrimSpace(parts[1]))
+		if err != nil {
+			return nil, fmt.Errorf("invalid end value in range %s: %w", r, err)
+		}
+
+		result = append(result, []int{start, end})
+	}
+
+	return result, nil
 }
