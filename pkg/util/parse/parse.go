@@ -45,6 +45,34 @@ func RuneGrid(data []byte) [][]rune {
 	return grid
 }
 
+// DigitGrid converts each non-empty line of digits into a row of ints.
+func DigitGrid(data []byte) ([][]int, error) {
+	rawLines := bytes.Split(bytes.TrimSpace(data), []byte("\n"))
+	grid := make([][]int, 0, len(rawLines))
+
+	for _, raw := range rawLines {
+		line := bytes.TrimSpace(raw)
+		if len(line) == 0 {
+			continue
+		}
+
+		row := make([]int, len(line))
+		for i, b := range line {
+			if b < '0' || b > '9' {
+				return nil, fmt.Errorf("invalid digit %q in input", b)
+			}
+			row[i] = int(b - '0')
+		}
+		grid = append(grid, row)
+	}
+
+	if len(grid) == 0 {
+		return nil, fmt.Errorf("no digit rows found in input")
+	}
+
+	return grid, nil
+}
+
 // IntMatrix treats each line as a whitespace-delimited list of integers.
 func IntMatrix(data []byte) ([][]int, error) {
 	lines := bytes.Split(bytes.TrimSpace(data), []byte("\n"))
