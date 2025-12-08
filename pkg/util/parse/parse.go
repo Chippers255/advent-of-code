@@ -36,13 +36,22 @@ func Ints(data []byte) ([]int, error) {
 }
 
 // RuneGrid converts the input into a 2D slice of runes.
-func RuneGrid(data []byte) [][]rune {
-	lines := bytes.Split(bytes.TrimRight(data, "\n"), []byte("\n"))
+// Returns an error if the input does not contain any rows.
+func RuneGrid(data []byte) ([][]rune, error) {
+	trimmed := bytes.TrimRight(data, "\n")
+	if len(trimmed) == 0 {
+		return nil, fmt.Errorf("no rune rows found in input")
+	}
+
+	lines := bytes.Split(trimmed, []byte("\n"))
 	grid := make([][]rune, 0, len(lines))
 	for _, line := range lines {
+		if len(line) == 0 {
+			return nil, fmt.Errorf("empty line found in input")
+		}
 		grid = append(grid, []rune(string(line)))
 	}
-	return grid
+	return grid, nil
 }
 
 // DigitGrid converts each non-empty line of digits into a row of ints.

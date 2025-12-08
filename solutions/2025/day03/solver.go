@@ -56,7 +56,6 @@ func (Solver) Part1(ctx solver.Context) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		fmt.Println(power)
 		answer += power
 	}
 	return fmt.Sprintf("%d", answer), nil
@@ -136,7 +135,6 @@ func (Solver) Part2(ctx solver.Context) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		fmt.Println(power)
 		answer += power
 	}
 	return fmt.Sprintf("%d", answer), nil
