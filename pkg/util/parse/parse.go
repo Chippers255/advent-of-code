@@ -147,3 +147,60 @@ func RangeList(data []byte) ([][]int, error) {
 
 	return result, nil
 }
+
+// RangeLinesAndInts parses input split by a blank line into two sections.
+// The first section contains dash-separated ranges (one per line) returned as [][]int.
+// The second section contains integers (one per line) returned as []int.
+func RangeLinesAndInts(data []byte) ([][]int, []int, error) {
+	normalized := strings.ReplaceAll(string(data), "\r\n", "\n")
+	parts := strings.Split(strings.TrimSpace(normalized), "\n\n")
+	if len(parts) != 2 {
+		return nil, nil, fmt.Errorf("expected two sections separated by a blank line, got %d", len(parts))
+	}
+
+	parseRange := func(line string) ([]int, error) {
+		fields := strings.Split(line, "-")
+		if len(fields) != 2 {
+			return nil, fmt.Errorf("invalid range %q (expected start-end)", line)
+		}
+		start, err := strconv.Atoi(strings.TrimSpace(fields[0]))
+		if err != nil {
+			return nil, fmt.Errorf("invalid start value in %q: %w", line, err)
+		}
+		end, err := strconv.Atoi(strings.TrimSpace(fields[1]))
+		if err != nil {
+			return nil, fmt.Errorf("invalid end value in %q: %w", line, err)
+		}
+		return []int{start, end}, nil
+	}
+
+	rangeLines := strings.Split(strings.TrimSpace(parts[0]), "\n")
+	ranges := make([][]int, 0, len(rangeLines))
+	for _, raw := range rangeLines {
+		line := strings.TrimSpace(raw)
+		if line == "" {
+			continue
+		}
+		r, err := parseRange(line)
+		if err != nil {
+			return nil, nil, err
+		}
+		ranges = append(ranges, r)
+	}
+
+	targetLines := strings.Split(strings.TrimSpace(parts[1]), "\n")
+	targets := make([]int, 0, len(targetLines))
+	for _, raw := range targetLines {
+		line := strings.TrimSpace(raw)
+		if line == "" {
+			continue
+		}
+		value, err := strconv.Atoi(line)
+		if err != nil {
+			return nil, nil, fmt.Errorf("invalid value %q: %w", line, err)
+		}
+		targets = append(targets, value)
+	}
+
+	return ranges, targets, nil
+}

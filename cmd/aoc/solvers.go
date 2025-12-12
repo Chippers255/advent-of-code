@@ -9,4 +9,5 @@ import (
 	_ "github.com/chippers255/advent-of-code/solutions/2025/day02"
 	_ "github.com/chippers255/advent-of-code/solutions/2025/day03"
 	_ "github.com/chippers255/advent-of-code/solutions/2025/day04"
+	_ "github.com/chippers255/advent-of-code/solutions/2025/day05"
 )
